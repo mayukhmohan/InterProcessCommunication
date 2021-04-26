@@ -3,13 +3,17 @@ import msg_pb2_grpc as pb2_grpc
 import msg_pb2 as pb2
 from python_standardized_server import MsgService
 import random
-# from memory_profiler import profile
+from time import monotonic
+from memory_profiler import profile
 
 # mprof run python_standardized_client.py
 # mprof plot
 # python -m memory_profiler python_standardized_client.py
 
-NO_OF_OBJECTS = 100
+NO_OF_OBJECTS = 10
+elapsed_time = 0
+NO_OF_ITERATION = 1000
+NO_OF_TIMES = 1000
 
 class MsgClient(object):
     def __init__(self):
@@ -23,10 +27,16 @@ class MsgClient(object):
         # bind the client and the server
         self.stub = pb2_grpc.MsgStub(self.channel)
 
-
+    # @profile
     def get_url(self, message):
+        global elapsed_time
         message = pb2.Message(message=message.message)
-        return self.stub.getServerResponse(message)
+        start = monotonic()
+        for i in range(NO_OF_ITERATION):
+            response = self.stub.getServerResponse(message)
+        end = monotonic()
+        elapsed_time = (end - start)
+        return response
 
 
 class DateTime:
@@ -90,7 +100,7 @@ if __name__ == '__main__':
                         second = int(random.random() * 60))
         courses.append(course)
         AddCourse(messageRequest.message.add(), course)
-    results = client.get_url(message=messageRequest)
+    """results = client.get_url(message=messageRequest)
     for (result, message) in zip(results.messageResponse, messageRequest.message):
         print("{")
         print(result.Course_ID, message.course_name, result.Course_Name, message.avg_marks, result.Avg_Marks, sep="\n")
@@ -99,5 +109,8 @@ if __name__ == '__main__':
               result.END_of_COURSE.Day, result.END_of_COURSE.Hour,
               result.END_of_COURSE.Minute, result.END_of_COURSE.Second)
         print("}")
-        print("}\n")
+        print("}\n")"""
     # print("In Client: {}".format(result))
+    for i in range(NO_OF_TIMES):
+        results = client.get_url(message=messageRequest)
+        print(elapsed_time)
