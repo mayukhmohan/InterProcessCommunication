@@ -1,0 +1,35 @@
+type Query {
+    getCourses: [Course]
+    getCourse(id: Int): Course
+}
+
+type Mutation {
+    updateCourse(course: CourseInput): CourseID
+    updateCourses(courses: [CourseInput]): [CourseID]
+}
+
+input CourseInput {
+    id: Int
+    course_name: String
+    avg_marks: Float
+}
+
+type CourseID {
+    id: Int
+}
+
+type Course {
+    id: Int
+    course_name: String
+    avg_marks: Float
+    end_of_course: DateTime
+}
+
+type DateTime {
+    year: Int
+    month: Int
+    day: Int
+    hour: Int
+    minute: Int
+    second: Int
+}

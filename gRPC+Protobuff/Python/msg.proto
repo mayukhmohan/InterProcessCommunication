@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package msg;
+option java_package = "com.mayukh.grpc_standardized";
+option java_multiple_files = true;
+
+service Msg{
+ rpc getServerResponse(Message) returns (MessageResponse);
+
+}
+
+message Message{
+ repeated Course message = 1;
+}
+
+message MessageResponse{
+ repeated CourseResponse messageResponse = 1;
+}
+
+message Course {
+  int32 id = 1;
+  string course_name = 2;
+  float avg_marks = 3;
+
+  message DateTime {
+    int32 year = 1;
+    int32 month = 2;
+    int32 day = 3;
+    int32 hour = 4;
+    int32 minute = 5;
+    int32 second = 6;
+  }
+
+  DateTime end_of_course = 4;
+}
+
+message CourseResponse {
+  int32 Course_ID = 1;
+  string Course_Name = 2;
+  float Avg_Marks = 3;
+
+  message DateTime {
+    int32 Year = 1;
+    int32 Month = 2;
+    int32 Day = 3;
+    int32 Hour = 4;
+    int32 Minute = 5;
+    int32 Second = 6;
+  }
+
+  DateTime END_of_COURSE = 4;
+}
+
+//python -m grpc_tools.protoc --proto_path=. ./msg.proto --python_out=. --grpc_python_out=.
